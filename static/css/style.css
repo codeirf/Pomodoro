@@ -1,18 +1,42 @@
-/* Modern Dark Pomodoro Timer - Redesigned UI/UX */
+/* Modern Pomodoro Timer - Dual Theme Support */
 
 :root {
-    /* Primary Dark Theme Colors */
+    /* Accent Colors for Different Modes (Theme Independent) */
+    --accent-focus: #ff6b6b;
+    --accent-break: #4ecdc4;
+    --accent-rest: #a8e6cf;
+    --accent-current: var(--accent-focus);
+
+    /* Border Radius */
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 24px;
+
+    /* Transitions */
+    --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-normal: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-slow: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-theme: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+    /* Typography */
+    --font-mono: 'JetBrains Mono', 'SF Mono', Monaco, 'Cascadia Code', monospace;
+    --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+}
+
+/* Dark Theme (Default) */
+:root,
+:root.theme-dark {
+    /* Background Colors */
     --bg-primary: #1e1e1e;
     --bg-secondary: #4d4d4d;
     --bg-tertiary: #2a2a2a;
     --bg-surface: rgba(45, 45, 45, 0.8);
     --bg-glass: rgba(255, 255, 255, 0.05);
-
-    /* Accent Colors for Different Modes */
-    --accent-focus: #ff6b6b;
-    --accent-break: #4ecdc4;
-    --accent-rest: #a8e6cf;
-    --accent-current: var(--accent-focus);
+    --bg-gradient-1: rgba(255, 107, 107, 0.1);
+    --bg-gradient-2: rgba(78, 205, 196, 0.1);
+    --bg-gradient-3: rgba(168, 230, 207, 0.05);
+    --bg-grid: rgba(255, 255, 255, 0.02);
 
     /* Text Colors */
     --text-primary: #ffffff;
@@ -31,21 +55,86 @@
     --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.2);
     --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.3);
     --shadow-glow: 0 0 20px rgba(255, 107, 107, 0.3);
+    --shadow-glow-current: 0 0 20px var(--accent-current);
 
-    /* Border Radius */
-    --radius-sm: 8px;
-    --radius-md: 12px;
-    --radius-lg: 16px;
-    --radius-xl: 24px;
+    /* Progress Ring Effects */
+    --progress-glow: 0 0 20px rgba(255, 107, 107, 0.3);
+    --timer-text-shadow: 0 0 30px rgba(255, 107, 107, 0.3);
+}
 
-    /* Transitions */
-    --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
-    --transition-normal: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    --transition-slow: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+/* Light Theme */
+:root.theme-light {
+    /* Background Colors */
+    --bg-primary: #ffffff;
+    --bg-secondary: #f8f9fa;
+    --bg-tertiary: #e9ecef;
+    --bg-surface: rgba(255, 255, 255, 0.9);
+    --bg-glass: rgba(255, 255, 255, 0.7);
+    --bg-gradient-1: rgba(255, 107, 107, 0.08);
+    --bg-gradient-2: rgba(78, 205, 196, 0.08);
+    --bg-gradient-3: rgba(168, 230, 207, 0.05);
+    --bg-grid: rgba(0, 0, 0, 0.03);
 
-    /* Typography */
-    --font-mono: 'JetBrains Mono', 'SF Mono', Monaco, 'Cascadia Code', monospace;
-    --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    /* Text Colors */
+    --text-primary: #1a1a1a;
+    --text-secondary: #4a5568;
+    --text-tertiary: #718096;
+    --text-accent: var(--accent-current);
+
+    /* Interactive States */
+    --hover-overlay: rgba(0, 0, 0, 0.05);
+    --active-overlay: rgba(0, 0, 0, 0.1);
+    --border-subtle: rgba(0, 0, 0, 0.1);
+    --border-focus: rgba(0, 0, 0, 0.15);
+
+    /* Shadows & Effects */
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.12);
+    --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.15);
+    --shadow-glow: 0 0 20px rgba(255, 107, 107, 0.2);
+    --shadow-glow-current: 0 0 20px var(--accent-current);
+
+    /* Progress Ring Effects */
+    --progress-glow: 0 0 20px rgba(255, 107, 107, 0.2);
+    --timer-text-shadow: 0 0 30px rgba(255, 107, 107, 0.2);
+}
+
+/* System Preference Detection */
+@media (prefers-color-scheme: light) {
+    :root:not(.theme-dark):not(.theme-light) {
+        /* Background Colors */
+        --bg-primary: #ffffff;
+        --bg-secondary: #f8f9fa;
+        --bg-tertiary: #e9ecef;
+        --bg-surface: rgba(255, 255, 255, 0.9);
+        --bg-glass: rgba(255, 255, 255, 0.7);
+        --bg-gradient-1: rgba(255, 107, 107, 0.08);
+        --bg-gradient-2: rgba(78, 205, 196, 0.08);
+        --bg-gradient-3: rgba(168, 230, 207, 0.05);
+        --bg-grid: rgba(0, 0, 0, 0.03);
+
+        /* Text Colors */
+        --text-primary: #1a1a1a;
+        --text-secondary: #4a5568;
+        --text-tertiary: #718096;
+
+        /* Interactive States */
+        --hover-overlay: rgba(0, 0, 0, 0.05);
+        --active-overlay: rgba(0, 0, 0, 0.1);
+        --border-subtle: rgba(0, 0, 0, 0.1);
+        --border-focus: rgba(0, 0, 0, 0.15);
+
+        /* Shadows & Effects */
+        --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+        --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.12);
+        --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.15);
+        --shadow-glow: 0 0 20px rgba(255, 107, 107, 0.2);
+        --shadow-glow-current: 0 0 20px var(--accent-current);
+
+        /* Progress Ring Effects */
+        --progress-glow: 0 0 20px rgba(255, 107, 107, 0.2);
+        --timer-text-shadow: 0 0 30px rgba(255, 107, 107, 0.2);
+    }
 }
 
 /* Reset & Base Styles */
@@ -74,6 +163,7 @@ body {
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    transition: background-color var(--transition-theme), color var(--transition-theme);
 }
 
 /* Background Elements */
@@ -83,11 +173,12 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background: radial-gradient(circle at 20% 80%, rgba(255, 107, 107, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(78, 205, 196, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 40% 40%, rgba(168, 230, 207, 0.05) 0%, transparent 50%);
+    background: radial-gradient(circle at 20% 80%, var(--bg-gradient-1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, var(--bg-gradient-2) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, var(--bg-gradient-3) 0%, transparent 50%);
     pointer-events: none;
     z-index: -2;
+    transition: background var(--transition-theme);
 }
 
 .bg-grid {
@@ -97,11 +188,12 @@ body {
     width: 100%;
     height: 100%;
     background-image:
-        linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+        linear-gradient(var(--bg-grid) 1px, transparent 1px),
+        linear-gradient(90deg, var(--bg-grid) 1px, transparent 1px);
     background-size: 50px 50px;
     pointer-events: none;
     z-index: -1;
+    transition: background-image var(--transition-theme);
 }
 
 /* App Container */
@@ -129,6 +221,13 @@ body {
     border-radius: var(--radius-lg);
     padding: 1.5rem 2rem;
     box-shadow: var(--shadow-md);
+    transition: all var(--transition-theme);
+}
+
+.header-controls {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
 }
 
 .logo {
@@ -183,6 +282,85 @@ body {
     font-weight: 500;
 }
 
+/* Theme Switcher */
+.theme-toggle {
+    background: var(--bg-glass);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--border-subtle);
+    border-radius: 2rem;
+    padding: 0.25rem;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    position: relative;
+    width: 3.5rem;
+    height: 1.75rem;
+    display: flex;
+    align-items: center;
+}
+
+.theme-toggle:hover {
+    border-color: var(--border-focus);
+    box-shadow: var(--shadow-sm);
+}
+
+.theme-toggle:focus-visible {
+    outline: 2px solid var(--accent-current);
+    outline-offset: 2px;
+}
+
+.theme-toggle-track {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    border-radius: inherit;
+}
+
+.theme-toggle-thumb {
+    width: 1.25rem;
+    height: 1.25rem;
+    background: var(--accent-current);
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    transition: all var(--transition-normal);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-sm);
+    left: 0.125rem;
+}
+
+.theme-toggle.light .theme-toggle-thumb {
+    left: calc(100% - 1.375rem);
+}
+
+.theme-icon {
+    color: white;
+    transition: all var(--transition-fast);
+    position: absolute;
+}
+
+.theme-toggle .sun-icon {
+    opacity: 0;
+    transform: scale(0.8) rotate(180deg);
+}
+
+.theme-toggle .moon-icon {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+}
+
+.theme-toggle.light .sun-icon {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+}
+
+.theme-toggle.light .moon-icon {
+    opacity: 0;
+    transform: scale(0.8) rotate(-180deg);
+}
+
 /* Main Content */
 .main-content {
     flex: 1;
@@ -206,6 +384,7 @@ body {
     border-radius: var(--radius-lg);
     padding: 0.5rem;
     box-shadow: var(--shadow-sm);
+    transition: all var(--transition-theme);
 }
 
 .mode-tab {
@@ -311,7 +490,8 @@ body {
 
 .progress-ring {
     transform: rotate(-90deg);
-    filter: drop-shadow(0 0 20px rgba(255, 107, 107, 0.3));
+    filter: drop-shadow(var(--progress-glow));
+    transition: filter var(--transition-theme);
 }
 
 .progress-track {
@@ -353,7 +533,8 @@ body {
     font-family: var(--font-mono);
     letter-spacing: -0.02em;
     line-height: 1;
-    text-shadow: 0 0 30px rgba(255, 107, 107, 0.3);
+    text-shadow: var(--timer-text-shadow);
+    transition: color var(--transition-theme), text-shadow var(--transition-theme);
 }
 
 .mode-status {
@@ -382,7 +563,7 @@ body {
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    transition: all var(--transition-normal);
+    transition: all var(--transition-normal), background var(--transition-theme), border-color var(--transition-theme), color var(--transition-theme);
     position: relative;
     overflow: hidden;
     color: var(--text-secondary);
@@ -456,6 +637,7 @@ body {
     border-radius: var(--radius-lg);
     padding: 1.5rem;
     box-shadow: var(--shadow-sm);
+    transition: all var(--transition-theme);
 }
 
 .task-header {
@@ -548,7 +730,7 @@ body {
     padding: 1.5rem;
     box-shadow: var(--shadow-lg);
     transform: translateX(120%);
-    transition: transform var(--transition-slow);
+    transition: transform var(--transition-slow), background var(--transition-theme), border-color var(--transition-theme), box-shadow var(--transition-theme);
     z-index: 1000;
     max-width: 350px;
     min-width: 300px;
@@ -691,6 +873,11 @@ body {
         flex-direction: column;
         gap: 1rem;
         text-align: center;
+    }
+
+    .header-controls {
+        flex-direction: column;
+        gap: 1rem;
     }
 
     .header-stats {

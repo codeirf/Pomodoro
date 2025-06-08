@@ -18,10 +18,12 @@ class PomodoroTimer {
         this.sessionCount = 0;
         this.totalTimeToday = 0;
         this.currentTask = '';
+        this.currentTheme = 'auto'; // 'auto', 'light', 'dark'
 
         this.initializeElements();
         this.bindEvents();
         this.loadStoredData();
+        this.initializeTheme();
         this.updateDisplay();
         this.updateProgressRing();
         this.updateTheme();
@@ -54,6 +56,12 @@ class PomodoroTimer {
         this.taskDisplay = document.getElementById('taskDisplay');
         this.editTaskBtn = document.getElementById('editTaskBtn');
 
+        // Theme toggle
+        this.themeToggle = document.getElementById('themeToggle');
+        if (!this.themeToggle) {
+            console.error('Theme toggle element not found!');
+        }
+
         // Notification
         this.notification = document.getElementById('notification');
         this.toastTitle = document.getElementById('toastTitle');
@@ -72,6 +80,7 @@ class PomodoroTimer {
             this.sessionCount = data.sessionCount || 0;
             this.totalTimeToday = data.totalTimeToday || 0;
             this.currentTask = data.currentTask || '';
+            this.currentTheme = data.theme || 'auto';
 
             // Check if it's a new day
             const lastDate = data.lastDate;
@@ -89,6 +98,7 @@ class PomodoroTimer {
             sessionCount: this.sessionCount,
             totalTimeToday: this.totalTimeToday,
             currentTask: this.currentTask,
+            theme: this.currentTheme,
             lastDate: new Date().toDateString()
         };
         localStorage.setItem('pomodoroData', JSON.stringify(data));
@@ -119,6 +129,14 @@ class PomodoroTimer {
                 this.cancelTaskEdit();
             }
         });
+
+        // Theme toggle events
+        if (this.themeToggle) {
+            this.themeToggle.addEventListener('click', () => {
+                console.log('Theme toggle clicked!');
+                this.toggleTheme();
+            });
+        }
 
         // Notification events
         this.toastClose.addEventListener('click', () => this.hideNotification());
@@ -311,6 +329,90 @@ class PomodoroTimer {
         }
     }
 
+    // Theme Management Methods
+    initializeTheme() {
+        // Apply stored theme or detect system preference
+        this.applyTheme(this.currentTheme);
+        this.updateThemeToggle();
+
+        // Listen for system theme changes
+        if (window.matchMedia) {
+            const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+            mediaQuery.addEventListener('change', () => {
+                if (this.currentTheme === 'auto') {
+                    this.applyTheme('auto');
+                }
+            });
+        }
+    }
+
+    toggleTheme() {
+        // Cycle through themes: auto -> light -> dark -> auto
+        const themes = ['auto', 'light', 'dark'];
+        const currentIndex = themes.indexOf(this.currentTheme);
+        const nextIndex = (currentIndex + 1) % themes.length;
+
+        console.log(`Theme toggle: ${this.currentTheme} -> ${themes[nextIndex]}`);
+
+        this.currentTheme = themes[nextIndex];
+        this.applyTheme(this.currentTheme);
+        this.updateThemeToggle();
+        this.saveData();
+    }
+
+    applyTheme(theme) {
+        const root = document.documentElement; // This targets :root (html element)
+
+        // Remove existing theme classes
+        root.classList.remove('theme-light', 'theme-dark');
+
+        if (theme === 'light') {
+            root.classList.add('theme-light');
+        } else if (theme === 'dark') {
+            root.classList.add('theme-dark');
+        } else if (theme === 'auto') {
+            // Use system preference
+            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
+                root.classList.add('theme-light');
+            } else {
+                root.classList.add('theme-dark');
+            }
+        }
+
+        // Debug logging
+        console.log(`Theme applied: ${theme}, effective theme: ${this.getEffectiveTheme()}, root classes:`, root.classList.toString());
+    }
+
+    updateThemeToggle() {
+        if (!this.themeToggle) {
+            console.error('Cannot update theme toggle - element not found');
+            return;
+        }
+
+        const isLight = this.getEffectiveTheme() === 'light';
+        this.themeToggle.classList.toggle('light', isLight);
+
+        // Update ARIA label
+        const themeNames = {
+            'auto': 'system',
+            'light': 'light',
+            'dark': 'dark'
+        };
+
+        this.themeToggle.setAttribute('aria-label',
+            `Current theme: ${themeNames[this.currentTheme]}. Click to switch theme.`);
+
+        // Debug logging
+        console.log(`Theme toggle updated: isLight=${isLight}, toggle classes:`, this.themeToggle.classList.toString());
+    }
+
+    getEffectiveTheme() {
+        if (this.currentTheme === 'auto') {
+            return window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+        }
+        return this.currentTheme;
+    }
+
     updateDisplay() {
         const minutes = Math.floor(this.timeRemaining / 60);
         const seconds = this.timeRemaining % 60;
@@ -452,6 +554,7 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log('R - Reset timer');
     console.log('S - Skip session');
     console.log('T - Edit task');
+    console.log('Theme will follow system preference unless manually changed');
 
     // Initialize stats display
     timer.updateStats();
