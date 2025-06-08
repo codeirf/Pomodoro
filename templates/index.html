@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pomodoro Timer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1 class="title">Pomodoro Timer</h1>
+            <p class="subtitle">Stay focused, take breaks, be productive</p>
+        </header>
+
+        <main class="main">
+            <!-- Mode Selection -->
+            <div class="mode-selector">
+                <button class="mode-btn active" data-mode="pomodoro">
+                    <span class="mode-icon">🍅</span>
+                    <span class="mode-text">Pomodoro</span>
+                    <span class="mode-duration">25 min</span>
+                </button>
+                <button class="mode-btn" data-mode="short_break">
+                    <span class="mode-icon">☕</span>
+                    <span class="mode-text">Short Break</span>
+                    <span class="mode-duration">5 min</span>
+                </button>
+                <button class="mode-btn" data-mode="long_break">
+                    <span class="mode-icon">🌙</span>
+                    <span class="mode-text">Long Break</span>
+                    <span class="mode-duration">15 min</span>
+                </button>
+            </div>
+
+            <!-- Timer Display -->
+            <div class="timer-container">
+                <div class="timer-circle">
+                    <svg class="progress-ring" width="300" height="300">
+                        <circle class="progress-ring-background" cx="150" cy="150" r="140"></circle>
+                        <circle class="progress-ring-progress" cx="150" cy="150" r="140"></circle>
+                    </svg>
+                    <div class="timer-display">
+                        <div class="time-text" id="timeDisplay">25:00</div>
+                        <div class="mode-text-small" id="currentMode">Pomodoro Session</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Controls -->
+            <div class="controls">
+                <button class="control-btn secondary" id="resetBtn">
+                    <span class="btn-icon">↻</span>
+                    <span class="btn-text">Reset</span>
+                </button>
+                <button class="control-btn primary" id="playPauseBtn">
+                    <span class="btn-icon" id="playPauseIcon">▶</span>
+                    <span class="btn-text" id="playPauseText">Start</span>
+                </button>
+                <button class="control-btn secondary" id="skipBtn">
+                    <span class="btn-icon">⏭</span>
+                    <span class="btn-text">Skip</span>
+                </button>
+            </div>
+
+            <!-- Session Counter -->
+            <div class="session-info">
+                <div class="session-counter">
+                    <span class="counter-label">Sessions completed:</span>
+                    <span class="counter-value" id="sessionCount">0</span>
+                </div>
+            </div>
+        </main>
+
+        <!-- Notification -->
+        <div class="notification" id="notification">
+            <div class="notification-content">
+                <span class="notification-icon">🎉</span>
+                <span class="notification-text" id="notificationText">Session completed!</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/timer.js') }}"></script>
+</body>
+</html>
