@@ -3,83 +3,176 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pomodoro Timer</title>
+    <title>Focus • Pomodoro Timer</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="container">
+    <!-- Background Elements -->
+    <div class="bg-gradient"></div>
+    <div class="bg-grid"></div>
+
+    <div class="app-container">
+        <!-- Header -->
         <header class="header">
-            <h1 class="title">Pomodoro Timer</h1>
-            <p class="subtitle">Stay focused, take breaks, be productive</p>
-        </header>
-
-        <main class="main">
-            <!-- Mode Selection -->
-            <div class="mode-selector">
-                <button class="mode-btn active" data-mode="pomodoro">
-                    <span class="mode-icon">🍅</span>
-                    <span class="mode-text">Pomodoro</span>
-                    <span class="mode-duration">25 min</span>
-                </button>
-                <button class="mode-btn" data-mode="short_break">
-                    <span class="mode-icon">☕</span>
-                    <span class="mode-text">Short Break</span>
-                    <span class="mode-duration">5 min</span>
-                </button>
-                <button class="mode-btn" data-mode="long_break">
-                    <span class="mode-icon">🌙</span>
-                    <span class="mode-text">Long Break</span>
-                    <span class="mode-duration">15 min</span>
-                </button>
-            </div>
-
-            <!-- Timer Display -->
-            <div class="timer-container">
-                <div class="timer-circle">
-                    <svg class="progress-ring" width="300" height="300">
-                        <circle class="progress-ring-background" cx="150" cy="150" r="140"></circle>
-                        <circle class="progress-ring-progress" cx="150" cy="150" r="140"></circle>
-                    </svg>
-                    <div class="timer-display">
-                        <div class="time-text" id="timeDisplay">25:00</div>
-                        <div class="mode-text-small" id="currentMode">Pomodoro Session</div>
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                            <path d="M12 6v6l4 2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                    </div>
+                    <h1 class="logo-text">Focus</h1>
+                </div>
+                <div class="header-stats">
+                    <div class="stat-item">
+                        <span class="stat-value" id="sessionCount">0</span>
+                        <span class="stat-label">Sessions</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value" id="totalTime">0h</span>
+                        <span class="stat-label">Today</span>
                     </div>
                 </div>
             </div>
+        </header>
 
-            <!-- Controls -->
-            <div class="controls">
-                <button class="control-btn secondary" id="resetBtn">
-                    <span class="btn-icon">↻</span>
-                    <span class="btn-text">Reset</span>
-                </button>
-                <button class="control-btn primary" id="playPauseBtn">
-                    <span class="btn-icon" id="playPauseIcon">▶</span>
-                    <span class="btn-text" id="playPauseText">Start</span>
-                </button>
-                <button class="control-btn secondary" id="skipBtn">
-                    <span class="btn-icon">⏭</span>
-                    <span class="btn-text">Skip</span>
-                </button>
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Mode Selection -->
+            <div class="mode-selector">
+                <div class="mode-tabs">
+                    <button class="mode-tab active" data-mode="pomodoro">
+                        <div class="mode-tab-content">
+                            <div class="mode-icon">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                    <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                                    <path d="M12 6v6l4 2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                </svg>
+                            </div>
+                            <span class="mode-name">Focus</span>
+                            <span class="mode-duration">25m</span>
+                        </div>
+                    </button>
+                    <button class="mode-tab" data-mode="short_break">
+                        <div class="mode-tab-content">
+                            <div class="mode-icon">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                    <path d="M6 2v6h.01L6 8.01 10 12l-4 4-.01.01V22h12v-5.99-.01L18 16l-4-4 4-3.99.01-.01V2H6z" stroke="currentColor" stroke-width="2" fill="currentColor"/>
+                                </svg>
+                            </div>
+                            <span class="mode-name">Break</span>
+                            <span class="mode-duration">5m</span>
+                        </div>
+                    </button>
+                    <button class="mode-tab" data-mode="long_break">
+                        <div class="mode-tab-content">
+                            <div class="mode-icon">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" stroke="currentColor" stroke-width="2"/>
+                                </svg>
+                            </div>
+                            <span class="mode-name">Rest</span>
+                            <span class="mode-duration">15m</span>
+                        </div>
+                    </button>
+                </div>
             </div>
 
-            <!-- Session Counter -->
-            <div class="session-info">
-                <div class="session-counter">
-                    <span class="counter-label">Sessions completed:</span>
-                    <span class="counter-value" id="sessionCount">0</span>
+            <!-- Timer Display -->
+            <div class="timer-section">
+                <div class="timer-container">
+                    <div class="timer-ring">
+                        <svg class="progress-ring" width="320" height="320" viewBox="0 0 320 320">
+                            <defs>
+                                <linearGradient id="progressGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#ff6b6b;stop-opacity:1" />
+                                    <stop offset="100%" style="stop-color:#ee5a52;stop-opacity:1" />
+                                </linearGradient>
+                            </defs>
+                            <circle class="progress-track" cx="160" cy="160" r="140"/>
+                            <circle class="progress-fill" cx="160" cy="160" r="140"/>
+                        </svg>
+                        <div class="timer-content">
+                            <div class="timer-display">
+                                <div class="time-text" id="timeDisplay">25:00</div>
+                                <div class="mode-status" id="currentMode">Focus Session</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Controls -->
+                <div class="timer-controls">
+                    <button class="control-btn secondary" id="resetBtn" title="Reset Timer (R)">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                            <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            <path d="M21 3v5h-5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            <path d="M8 16H3v5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                    </button>
+
+                    <button class="control-btn primary" id="playPauseBtn" title="Start/Pause (Space)">
+                        <svg class="play-icon" id="playIcon" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <polygon points="5,3 19,12 5,21" fill="currentColor"/>
+                        </svg>
+                        <svg class="pause-icon hidden" id="pauseIcon" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <rect x="6" y="4" width="4" height="16" fill="currentColor"/>
+                            <rect x="14" y="4" width="4" height="16" fill="currentColor"/>
+                        </svg>
+                    </button>
+
+                    <button class="control-btn secondary" id="skipBtn" title="Skip Session (S)">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                            <polygon points="5,4 15,12 5,20" fill="currentColor"/>
+                            <line x1="19" y1="5" x2="19" y2="19" stroke="currentColor" stroke-width="2"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Task Tracking Section -->
+            <div class="task-section">
+                <div class="task-header">
+                    <h3 class="task-title">Current Task</h3>
+                    <button class="task-edit-btn" id="editTaskBtn">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" stroke="currentColor" stroke-width="2"/>
+                            <path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" stroke="currentColor" stroke-width="2"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="task-input-container">
+                    <input type="text" class="task-input" id="taskInput" placeholder="What are you working on?" maxlength="50">
+                    <div class="task-display" id="taskDisplay">Click to add a task</div>
                 </div>
             </div>
         </main>
 
-        <!-- Notification -->
-        <div class="notification" id="notification">
-            <div class="notification-content">
-                <span class="notification-icon">🎉</span>
-                <span class="notification-text" id="notificationText">Session completed!</span>
+        <!-- Notification Toast -->
+        <div class="notification-toast" id="notification">
+            <div class="toast-content">
+                <div class="toast-icon" id="toastIcon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" stroke="currentColor" stroke-width="2"/>
+                        <polyline points="22,4 12,14.01 9,11.01" stroke="currentColor" stroke-width="2"/>
+                    </svg>
+                </div>
+                <div class="toast-text">
+                    <div class="toast-title" id="toastTitle">Session Complete!</div>
+                    <div class="toast-message" id="toastMessage">Great work! Time for a break.</div>
+                </div>
+                <button class="toast-close" id="toastClose">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                        <line x1="18" y1="6" x2="6" y2="18" stroke="currentColor" stroke-width="2"/>
+                        <line x1="6" y1="6" x2="18" y2="18" stroke="currentColor" stroke-width="2"/>
+                    </svg>
+                </button>
             </div>
         </div>
     </div>
